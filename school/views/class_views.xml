@@ -1,0 +1,66 @@
+<odoo>
+    <record id="view_school_class_tree" model="ir.ui.view">
+        <field name="name">school.class.tree</field>
+        <field name="model">school.classroom</field>
+        <field name="arch" type="xml">
+            <tree string="Classes">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="teacher_id"/>
+                <field name="schedule"/>
+                <field name="capacity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_school_class_search" model="ir.ui.view">
+        <field name="name">school.class.search</field>
+        <field name="model">school.classroom</field>
+        <field name="arch" type="xml">
+            <search string="Search Classes">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="teacher_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_school_class_form" model="ir.ui.view">
+        <field name="name">school.class.form</field>
+        <field name="model">school.classroom</field>
+        <field name="arch" type="xml">
+            <form string="Class">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="teacher_id"/>
+                        </group>
+                        <group>
+                            <field name="schedule"/>
+                            <field name="capacity"/>
+                        </group>
+                    </group>
+                    <field name="student_ids" context="{'default_class_id': active_id, 'default_teacher_id': teacher_id}">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="teacher_id" readonly="1"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="tuition_fee"/>
+                            <field name="active"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_school_class" model="ir.actions.act_window">
+        <field name="name">Classes</field>
+        <field name="res_model">school.classroom</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_school_class_search"/>
+    </record>
+</odoo>

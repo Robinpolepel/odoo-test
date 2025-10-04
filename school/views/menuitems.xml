@@ -1,0 +1,7 @@
+<odoo>
+    <menuitem id="menu_school_root" name="School" sequence="10"/>
+    <menuitem id="menu_school_teacher" name="Teachers" parent="menu_school_root" sequence="10" action="action_school_teacher"/>
+    <menuitem id="menu_school_class" name="Classes" parent="menu_school_root" sequence="20" action="action_school_class"/>
+    <menuitem id="menu_school_student" name="Students" parent="menu_school_root" sequence="30" action="action_school_student"/>
+    <menuitem id="menu_school_invoice" name="Invoices" parent="menu_school_root" sequence="40" action="action_school_invoice"/>
+</odoo>

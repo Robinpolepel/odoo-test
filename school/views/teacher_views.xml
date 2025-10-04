@@ -1,0 +1,98 @@
+<odoo>
+    <record id="view_school_teacher_tree" model="ir.ui.view">
+        <field name="name">school.teacher.tree</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <tree string="Teachers">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="student_count"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_school_teacher_search" model="ir.ui.view">
+        <field name="name">school.teacher.search</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <search string="Search Teachers">
+                <field name="name"/>
+                <field name="phone"/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="filter_inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_school_teacher_form" model="ir.ui.view">
+        <field name="name">school.teacher.form</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <form string="Teacher">
+                <header>
+                    <button name="action_activate_students" type="object" string="Activate Students" class="oe_highlight" attrs="{'invisible': [('student_ids', '=', [])]}"/>
+                    <button name="action_deactivate_students" type="object" string="Deactivate Students" attrs="{'invisible': [('student_ids', '=', [])]}"/>
+                    <button name="%(school.action_report_teacher_with_students)d" type="action" string="Print Student List" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_students" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="student_count" widget="statinfo" string="Students"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                        <group>
+                            <field name="address" placeholder="Address"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Classes">
+                            <field name="class_ids" context="{'default_teacher_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="schedule"/>
+                                    <field name="capacity"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Students">
+                            <field name="student_ids" context="{'default_teacher_id': active_id}" readonly="1">
+                                <tree string="Students">
+                                    <field name="name"/>
+                                    <field name="class_id"/>
+                                    <field name="email"/>
+                                    <field name="phone"/>
+                                    <field name="active"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="note" widget="html"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_school_teacher" model="ir.actions.act_window">
+        <field name="name">Teachers</field>
+        <field name="res_model">school.teacher</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_school_teacher_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first teacher record to get started.
+            </p>
+        </field>
+    </record>
+</odoo>

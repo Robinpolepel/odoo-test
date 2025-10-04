@@ -1,0 +1,13 @@
+<odoo>
+    <record id="ir_cron_school_generate_invoices" model="ir.cron">
+        <field name="name">School Monthly Invoice Generation</field>
+        <field name="model_id" ref="model_school_invoice"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_generate_monthly_invoices()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="DateTime.now()"/>
+        <field name="active">True</field>
+    </record>
+</odoo>

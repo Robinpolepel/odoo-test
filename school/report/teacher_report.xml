@@ -1,0 +1,11 @@
+<odoo>
+    <record id="action_report_teacher_with_students" model="ir.actions.report">
+        <field name="name">Teacher Student Report</field>
+        <field name="model">school.teacher</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school.report_teacher_student_document</field>
+        <field name="report_file">school.report_teacher_student_document</field>
+        <field name="binding_model_id" ref="model_school_teacher"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

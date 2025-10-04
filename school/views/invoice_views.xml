@@ -1,0 +1,65 @@
+<odoo>
+    <record id="view_school_invoice_tree" model="ir.ui.view">
+        <field name="name">school.invoice.tree</field>
+        <field name="model">school.invoice</field>
+        <field name="arch" type="xml">
+            <tree string="Invoices">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="teacher_id"/>
+                <field name="amount"/>
+                <field name="billing_period"/>
+                <field name="due_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_school_invoice_search" model="ir.ui.view">
+        <field name="name">school.invoice.search</field>
+        <field name="model">school.invoice</field>
+        <field name="arch" type="xml">
+            <search string="Search Invoices">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="teacher_id"/>
+                <field name="billing_period"/>
+                <field name="state"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_school_invoice_form" model="ir.ui.view">
+        <field name="name">school.invoice.form</field>
+        <field name="model">school.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Invoice">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="student_id"/>
+                            <field name="teacher_id" readonly="1"/>
+                            <field name="class_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="currency_id"/>
+                            <field name="billing_period"/>
+                            <field name="due_date"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <field name="note"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_school_invoice" model="ir.actions.act_window">
+        <field name="name">Invoices</field>
+        <field name="res_model">school.invoice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_school_invoice_search"/>
+    </record>
+</odoo>

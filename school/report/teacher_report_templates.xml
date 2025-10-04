@@ -1,0 +1,58 @@
+<odoo>
+    <template id="report_teacher_student_document">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <h2 class="text-center">Teacher Report</h2>
+                    <div class="mb-3">
+                        <p><strong>Name:</strong> <span t-esc="doc.name"/></p>
+                        <p><strong>Phone:</strong> <span t-esc="doc.phone"/></p>
+                        <p><strong>Email:</strong> <span t-esc="doc.email or '-'"/></p>
+                        <p><strong>Address:</strong> <span t-esc="doc.address or '-'"/></p>
+                        <p><strong>Total Active Students:</strong> <span t-esc="doc.student_count"/></p>
+                    </div>
+                    <h3>Classes</h3>
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>Schedule</th>
+                                <th>Capacity</th>
+                                <th>Students</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="doc.class_ids" t-as="class_line">
+                                <td>
+                                    <span t-esc="class_line.name"/>
+                                    <t t-if="class_line.code">
+                                        <span>(</span>
+                                        <span t-esc="class_line.code"/>
+                                        <span>)</span>
+                                    </t>
+                                </td>
+                                <td t-esc="class_line.schedule or '-'"/>
+                                <td t-esc="class_line.capacity or '-'"/>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <li t-foreach="class_line.student_ids" t-as="student">
+                                            <span t-esc="student.name"/>
+                                            <t t-if="student.phone">
+                                                <span> - </span>
+                                                <span t-esc="student.phone"/>
+                                            </t>
+                                        </li>
+                                        <li t-if="not class_line.student_ids">No students assigned.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr t-if="not doc.class_ids">
+                                <td colspan="4">No classes assigned to this teacher.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
