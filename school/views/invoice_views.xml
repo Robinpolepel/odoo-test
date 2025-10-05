@@ -34,6 +34,11 @@
         <field name="model">school.invoice</field>
         <field name="arch" type="xml">
             <form string="Invoice">
+                <header>
+                    <button name="action_print_invoice" type="object" string="Print Invoice"
+                        attrs="{'invisible': [('state', '!=', 'paid')]}"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
@@ -47,10 +52,16 @@
                             <field name="currency_id"/>
                             <field name="billing_period"/>
                             <field name="due_date"/>
-                            <field name="state"/>
                         </group>
                     </group>
-                    <field name="note"/>
+                    <notebook>
+                        <page name="invoice_lines" string="Lines">
+                            <field name="invoice_line_ids"/>
+                        </page>
+                        <page name="note" string="Notes">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

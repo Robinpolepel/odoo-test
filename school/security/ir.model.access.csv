@@ -3,3 +3,4 @@ school_teacher_user_access,school.teacher user access,model_school_teacher,base.
 school_student_user_access,school.student user access,model_school_student,base.group_user,1,1,1,1
 school_classroom_user_access,school.classroom user access,model_school_classroom,base.group_user,1,1,1,1
 school_invoice_user_access,school.invoice user access,model_school_invoice,base.group_user,1,1,1,1
+school_invoice_line_user_access,school.invoice.line user access,model_school_invoice_line,base.group_user,1,1,1,1

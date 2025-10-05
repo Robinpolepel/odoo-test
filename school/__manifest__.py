@@ -13,6 +13,7 @@
         'data/cron.xml',
         'report/teacher_report_templates.xml',
         'report/teacher_report.xml',
+        'report/invoice_report.xml',
         'views/teacher_views.xml',
         'views/class_views.xml',
         'views/student_views.xml',

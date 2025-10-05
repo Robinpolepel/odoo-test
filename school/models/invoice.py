@@ -11,9 +11,11 @@ class SchoolInvoice(models.Model):
     student_id = fields.Many2one('school.student', string='Student', required=True)
     teacher_id = fields.Many2one('school.teacher', string='Teacher', related='student_id.teacher_id', store=True, readonly=True)
     class_id = fields.Many2one('school.classroom', string='Class', related='student_id.class_id', store=True, readonly=True)
-    amount = fields.Monetary(string='Amount', required=True)
+    amount = fields.Monetary(string='Amount', compute='_compute_amount', store=True)
+    amount_in_words = fields.Char(string='Amount In Words', compute='_compute_amount', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id)
-    billing_period = fields.Date(string='Billing Period', required=True, default=lambda self: self._default_billing_period())
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company.id)
+    billing_period = fields.Date(string='Billing Period', required=True)
     due_date = fields.Date(string='Due Date')
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -21,6 +23,7 @@ class SchoolInvoice(models.Model):
         ('paid', 'Paid'),
     ], default='draft')
     note = fields.Text()
+    invoice_line_ids = fields.One2many('school.invoice.line', 'invoice_id', string='Invoice Lines')
 
     _sql_constraints = [
         (
@@ -30,13 +33,16 @@ class SchoolInvoice(models.Model):
         ),
     ]
 
-    @api.model
-    def _default_billing_period(self):
-        today = fields.Date.context_today(self)
-        if isinstance(today, date):
-            return today.replace(day=1)
-        parsed = fields.Date.from_string(today)
-        return parsed.replace(day=1)
+    @api.depends('invoice_line_ids.amount')
+    def _compute_amount(self):
+        for invoice in self:
+            invoice.amount = sum(line.amount for line in invoice.invoice_line_ids)
+            invoice.amount_in_words = invoice.currency_id.amount_to_text(invoice.amount)
+
+    def action_print_invoice(self):
+        if self.state != 'paid':
+            raise UserError('Invoice must be marked as Paid before printing.')
+        return self.env.ref('school.action_report_invoice').report_action(self)
 
     @api.model
     def create(self, vals):
@@ -99,3 +105,12 @@ class SchoolInvoice(models.Model):
                 'currency_id': student.currency_id.id,
             })
         return True
+
+class SchoolInvoiceLine(models.Model):
+    _name = 'school.invoice.line'
+    _description = 'Invoice Line'
+
+    invoice_id = fields.Many2one('school.invoice', string='Invoice', required=True)
+    name = fields.Char(string='Description', required=True)
+    amount = fields.Monetary(string='Amount', required=True)
+    currency_id = fields.Many2one(related='invoice_id.currency_id', string='Currency')

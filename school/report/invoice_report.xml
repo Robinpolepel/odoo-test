@@ -1,0 +1,109 @@
+<odoo>
+
+    <record id="action_report_invoice" model="ir.actions.report">
+        <field name="name">Invoice Report</field>
+        <field name="model">school.invoice</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school.report_invoice</field>
+        <field name="report_file">school.report_invoice</field>
+        <field name="binding_model_id" ref="model_school_teacher"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_invoice">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <div class="row">
+                        <div class="col-3">
+                            <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" class="img-fluid" alt="Logo"/>
+                        </div>
+                        <div class="col-9">
+                            <div class="ms-3">
+                                <h2><span t-esc="doc.company_id.name"/></h2>
+                                <p><span t-esc="doc.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2" style="border-top: 1px solid black; border-bottom: 1px solid black;">
+                        <h3 class="text-center fw-bolder py-1">Bukti Pembayaran Siswa</h3>
+                    </div>
+                    <!-- Header Section -->
+                    <div class="row p-2">
+                        <div class="col-6">
+                            <p><strong>No. Transaksi:</strong> <span t-esc="doc.name"/></p>
+                            <p><strong>Tanggal:</strong> <span t-esc="doc.billing_period.strftime('%d/%m/%Y')"/></p>
+                            <p><strong>Jam Cetak:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M:%S')"/></p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <p><strong>NIS:</strong> </p>
+                            <p><strong>Nama Siswa:</strong> <span t-esc="doc.student_id.name"/></p>
+                            <p><strong>Kelas:</strong> <span t-esc="doc.class_id.name"/></p>
+                        </div>
+                    </div>
+
+                    <!-- Table for Billing Lines -->
+                    <table class="table table-borderless mt-3" style="border-bottom: 1px solid black;">
+                        <thead style="border-top: 1px solid black; border-bottom: 1px solid black;">
+                            <tr>
+                                <th style="width: 5%; text-align: left;"><span class="fw-bold">No.</span></th>
+                                <th style="width: 70%; text-align: left;"><span class="fw-bold">Keterangan Pembayaran</span></th>
+                                <th style="width: 25%; text-align: right;"><span class="fw-bold">Jumlah (Rp.)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="index" t-value="1"/>
+                            <t t-foreach="doc.invoice_line_ids" t-as="line">
+                                <tr>
+                                    <td style="width: 5%; text-align: left;"><span t-esc="index"/></td>
+                                    <td style="width: 70%; text-align: left;"><span t-esc="line.name"/></td>
+                                    <td style="width: 25%; text-align: right;"><span t-esc="line.amount"/></td>
+                                </tr>
+                                <t t-set="index" t-value="index+1"/>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- Grand Total Section -->
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="fw-bold">Terbilang :</p>
+                        </div>
+                        <div class="col-6 px-2" style="border-bottom: 1px solid black;">
+                            <div style="float: right;">
+                                <span class="fw-bold me-3">Grand Total : </span>
+                                <span class="fw-normal" t-esc="doc.amount"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <p class="fw-bolder" t-esc="doc.amount_in_words"/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>Catatan :</p>
+                            <span t-esc="doc.note"/>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-center">
+                                Karanganyar, <span t-esc="doc.billing_period.strftime('%d/%m/%Y')"/>
+                                <br/>
+                                Yang Menerima,
+                            </p>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p class="text-center">Widya Nanda Gardhea Putri, S.Pd.</p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
